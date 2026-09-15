@@ -1,0 +1,29 @@
+{
+  "name": "prontovital-api",
+  "version": "1.0.0",
+  "description": "Este é o repositório da API responsável por gerenciar a inteligência de negócios, a pré-triagem, o agendamento de consultas e as integrações com IA da solução digital Prontovital (focada inicialmente no polo médico de Recife). A API fornece dados e serviços em tempo real para sustentar as aplicações Web PWA e Mobile.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielnunes17/prontovital-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/gabrielnunes17/prontovital-api/issues"
+  },
+  "homepage": "https://github.com/gabrielnunes17/prontovital-api#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.23.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.8"
+  }
+}

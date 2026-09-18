@@ -50,6 +50,6 @@ export const Clinica = sequelize.define(
   },
   {
     tableName: "clinicas",
-    timestamps: false,
+    timestamps: true,
   },
 );

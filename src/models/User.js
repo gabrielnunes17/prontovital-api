@@ -43,7 +43,7 @@ export const User = sequelize.define(
       defaultValue: true,
     },
     perfil: {
-      type: DataTypes.ENUM("paciente", "medico", "clinica"),
+      type: DataTypes.ENUM("paciente", "profissional", "clinica"),
       allowNull: false,
     },
   },
@@ -52,5 +52,3 @@ export const User = sequelize.define(
     timestamps: true,
   },
 );
-
-

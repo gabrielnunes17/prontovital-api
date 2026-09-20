@@ -1,38 +1,38 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
-export const Horario = sequelize.define(
-  "Horario",
+export const Profissional = sequelize.define(
+  "Profissional",
   {
-    id_horario: {
+    id_profissional: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    dia_da_semana: {
-      type: DataTypes.INTEGER,
+    cpf: {
+      type: DataTypes.STRING(14),
       allowNull: false,
-      validate: { min: 0, max: 6 },
+      unique: true,
     },
-    horario_abertura: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
-    horario_fechamento: {
-      type: DataTypes.TIME,
+    conselho: {
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
-    id_clinica: {
-      type: DataTypes.BIGINT,
+    registro_profissional: {
+      type: DataTypes.STRING(30),
       allowNull: false,
     },
-    id_profissional: {
+    uf_registro: {
+      type: DataTypes.STRING(2),
+      allowNull: false,
+    },
+    id_user: {
       type: DataTypes.BIGINT,
       allowNull: false,
     },
   },
   {
-    tableName: "horarios",
+    tableName: "profissionais",
     timestamps: true,
   },
 );

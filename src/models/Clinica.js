@@ -16,6 +16,7 @@ export const Clinica = sequelize.define(
     },
     id_user: {
       type: DataTypes.BIGINT,
+      allowNull: false,
     },
   },
   {

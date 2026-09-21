@@ -10,7 +10,9 @@ export async function conectarESincronizar() {
   try {
     await sequelize.authenticate();
 
-    await import("./models/Clinica.js");
+    const { initAssociations } = await import("./models/associations.js");
+
+    initAssociations();
 
     await sequelize.sync({ alter: true });
 

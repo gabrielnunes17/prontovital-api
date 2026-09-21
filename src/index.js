@@ -1,14 +1,14 @@
 import express from "express";
 import { conectarESincronizar } from "./db.js";
 
-import clinicaRoutes from "./routes/clinicaRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-app.use("/clinicas", clinicaRoutes);
+app.use("/usuarios", userRoutes);
 
 conectarESincronizar();
 

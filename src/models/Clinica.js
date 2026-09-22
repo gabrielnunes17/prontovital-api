@@ -14,6 +14,10 @@ export const Clinica = sequelize.define(
       allowNull: false,
       unique: true,
     },
+    bairro: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     id_user: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -24,6 +28,3 @@ export const Clinica = sequelize.define(
     timestamps: true,
   },
 );
-
-
-

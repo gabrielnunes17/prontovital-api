@@ -14,14 +14,57 @@ Uma arquitetura de API robusta e escalável que centraliza as regras de negócio
 
 O repositório é o núcleo operacional da solução e engloba diversas frentes técnicas:
 
-* **Arquitetura de APIs:** Design e implementação de endpoints RESTful / GraphQL para comunicação client-server.
-* **Integração com IA:** Motores de inteligência artificial aplicados no apoio à pré-triagem e orientação do paciente.
-* **Segurança & Privacidade:** Gestão segura de autenticação, autorização e proteção de dados sensíveis de saúde.
-* **Análise de Sistemas & Engenharia de Dados:** Modelagem de banco de dados e orquestração de fluxos de agendamento.
+- **Arquitetura de APIs:** Design e implementação de endpoints RESTful para comunicação client-server.
+- **Integração com IA:** Motores de inteligência artificial aplicados no apoio à pré-triagem e orientação do paciente.
+- **Segurança & Privacidade:** Gestão segura de autenticação, autorização e proteção de dados sensíveis de saúde.
+- **Análise de Sistemas & Engenharia de Dados:** Modelagem de banco de dados e orquestração de fluxos de agendamento.
 
 ## 📌 Pilares do Projeto
 
-* **Segurança & Conformidade:** Tratamento rigoroso de dados de saúde e autenticação resiliente.
-* **Desempenho & Escalabilidade:** Endpoints de alta performance prontos para suportar múltiplas requisições simultâneas.
-* **Integração:** Comunicação fluida e padronizada entre os sistemas de saúde parceiros e os clientes (Mobile e PWA).
-* **Inteligência Artificial:** Serviços dedicados ao processamento inteligente da pré-triagem para otimizar a tomada de decisão.
+- **Segurança & Conformidade:** Tratamento rigoroso de dados de saúde e autenticação resiliente.
+- **Desempenho & Escalabilidade:** Endpoints de alta performance prontos para suportar múltiplas requisições simultâneas.
+- **Integração:** Comunicação fluida e padronizada entre os sistemas de saúde parceiros e os clientes (Mobile e PWA).
+- **Inteligência Artificial:** Serviços dedicados ao processamento inteligente da pré-triagem para otimizar a tomada de decisão.
+
+## 🧰 Tecnologias Utilizadas
+
+- **Node.js:** ambiente de execução da API.
+- **Express.js:** criação do servidor e dos endpoints HTTP.
+- **Sequelize ORM:** mapeamento e comunicação com o banco de dados.
+- **PostgreSQL:** banco de dados relacional.
+- **Docker Compose:** execução do container do PostgreSQL.
+
+## ▶️ Como Executar
+
+### Pré-requisitos
+
+- Node.js 18 ou superior e npm.
+- Docker com o comando Docker Compose disponível.
+
+### Inicialização
+
+1. Instale as dependências na pasta do projeto:
+
+   ```bash
+   npm install
+   ```
+
+2. Crie um arquivo `.env` na raiz do projeto com a URL de conexão do banco:
+
+   ```env
+   DATABASE_URL=postgres://prontovital_user:prontovital_pass@localhost:5432/prontovital_db
+   ```
+
+3. Suba o container do PostgreSQL:
+
+   ```bash
+   docker compose up -d
+   ```
+
+4. Inicie a API:
+
+   ```bash
+   npm run dev
+   ```
+
+O servidor ficará disponível em `http://localhost:3000`.

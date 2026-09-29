@@ -3,6 +3,7 @@ import { Clinica } from "./Clinica.js";
 import { Horario } from "./Horario.js";
 import { Profissional } from "./Profissional.js";
 import { Paciente } from "./Paciente.js";
+import { ClinicaProfissional } from "./ClinicaProfissional.js";
 
 export function initAssociations() {
   // Relacionamento User e Clinica
@@ -53,7 +54,7 @@ export function initAssociations() {
     targetKey: "id_clinica",
   });
 
-   // Relacionamento Profissional e Horario
+  // Relacionamento Profissional e Horario
   Profissional.hasMany(Horario, {
     foreignKey: "id_profissional",
     sourceKey: "id_profissional",
@@ -63,5 +64,17 @@ export function initAssociations() {
   Horario.belongsTo(Profissional, {
     foreignKey: "id_profissional",
     targetKey: "id_profissional",
+  });
+
+  //Relacionamento Clinica e Profissional
+  Clinica.belongsToMany(Profissional, {
+    through: ClinicaProfissional,
+    foreignKey: "id_clinica",
+    otherKey: "id_profissional",
+  });
+  Profissional.belongsToMany(Clinica, {
+    through: ClinicaProfissional,
+    foreignKey: "id_profissional",
+    otherKey: "id_clinica",
   });
 }

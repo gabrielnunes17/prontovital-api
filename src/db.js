@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { Sequelize } from "sequelize";
 
+import { popularEspecialidades } from "./controllers/especialidadeController.js";
+
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   logging: false,
@@ -15,6 +17,8 @@ export async function conectarESincronizar() {
     initAssociations();
 
     await sequelize.sync({ alter: true });
+
+    await popularEspecialidades();
 
     console.log(
       "✅ Banco de dados PostgreSQL conectado e tabelas sincronizadas!",

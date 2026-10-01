@@ -1,8 +1,6 @@
 import "dotenv/config";
 import { Sequelize } from "sequelize";
 
-import { popularEspecialidades } from "./controllers/especialidadeController.js";
-
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   logging: false,
@@ -18,6 +16,8 @@ export async function conectarESincronizar() {
 
     await sequelize.sync({ alter: true });
 
+    const { popularEspecialidades } =
+      await import("./controllers/especialidadeController.js");
     await popularEspecialidades();
 
     console.log(

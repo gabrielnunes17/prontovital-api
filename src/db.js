@@ -16,6 +16,10 @@ export async function conectarESincronizar() {
 
     await sequelize.sync({ alter: true });
 
+    const { popularEspecialidades } =
+      await import("./controllers/especialidadeController.js");
+    await popularEspecialidades();
+
     console.log(
       "✅ Banco de dados PostgreSQL conectado e tabelas sincronizadas!",
     );

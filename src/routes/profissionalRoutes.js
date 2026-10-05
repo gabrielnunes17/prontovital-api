@@ -5,6 +5,7 @@ import {
   vincularEspecialidade,
 } from "../controllers/profissionalController.js";
 import {
+  consultarDisponibilidade,
   consultarHorario,
   criarHorario,
 } from "../controllers/horarioController.js";
@@ -12,6 +13,7 @@ import {
 const router = Router();
 
 router.get("/", consultarProfissionais);
+router.get("/:id_profissional/disponibilidade", consultarDisponibilidade);
 router.get("/:id_profissional/horarios", consultarHorario);
 router.post("/:id_profissional/horarios", criarHorario);
 router.patch(

@@ -10,9 +10,9 @@ export const Agendamento = sequelize.define(
       autoIncrement: true,
     },
     status: {
-      type: DataTypes.ENUM("pendente", "confirmado", "cancelado"),
+      type: DataTypes.ENUM("confirmado", "cancelado"),
       allowNull: false,
-      defaultValue: "pendente",
+      defaultValue: "confirmado",
     },
     data_agendamento: {
       type: DataTypes.DATEONLY,

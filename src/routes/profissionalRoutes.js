@@ -9,11 +9,13 @@ import {
   consultarHorario,
   criarHorario,
 } from "../controllers/horarioController.js";
+import { criarAgendamento } from "../controllers/agendamentoController.js";
 
 const router = Router();
 
 router.get("/", consultarProfissionais);
 router.get("/:id_profissional/disponibilidade", consultarDisponibilidade);
+router.post("/:id_profissional/agendamentos", criarAgendamento);
 router.get("/:id_profissional/horarios", consultarHorario);
 router.post("/:id_profissional/horarios", criarHorario);
 router.patch(

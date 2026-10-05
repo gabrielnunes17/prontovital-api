@@ -18,8 +18,13 @@ app.use("/clinicas", clinicaRoutes);
 app.use("/profissionais", profissionalRoutes);
 app.use("/especialidades", especialidadeRoutes);
 
-conectarESincronizar();
+try {
+  await conectarESincronizar();
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  });
+} catch (error) {
+  console.error("❌ Erro ao iniciar a API:", error);
+  process.exitCode = 1;
+}

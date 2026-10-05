@@ -5,6 +5,7 @@ import { Profissional } from "./Profissional.js";
 import { Paciente } from "./Paciente.js";
 import { ClinicaProfissional } from "./ClinicaProfissional.js";
 import { Especialidade } from "./Especialidade.js";
+import { Agendamento } from "./Agendamento.js";
 
 export function initAssociations() {
   // Relacionamento User e Clinica
@@ -88,5 +89,39 @@ export function initAssociations() {
   Profissional.belongsTo(Especialidade, {
     foreignKey: "id_especialidade",
     targetKey: "id_especialidade",
+  });
+
+  // Relacionamentos de Agendamento
+  Paciente.hasMany(Agendamento, {
+    foreignKey: "id_paciente",
+    sourceKey: "id_paciente",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Agendamento.belongsTo(Paciente, {
+    foreignKey: "id_paciente",
+    targetKey: "id_paciente",
+  });
+
+  Clinica.hasMany(Agendamento, {
+    foreignKey: "id_clinica",
+    sourceKey: "id_clinica",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Agendamento.belongsTo(Clinica, {
+    foreignKey: "id_clinica",
+    targetKey: "id_clinica",
+  });
+
+  Profissional.hasMany(Agendamento, {
+    foreignKey: "id_profissional",
+    sourceKey: "id_profissional",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Agendamento.belongsTo(Profissional, {
+    foreignKey: "id_profissional",
+    targetKey: "id_profissional",
   });
 }

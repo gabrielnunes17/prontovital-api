@@ -24,15 +24,29 @@ export const Horario = sequelize.define(
     },
     id_clinica: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: true,
     },
     id_profissional: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
     tableName: "horarios",
     timestamps: true,
+    validate: {
+      exactlyOneOwner() {
+        const hasClinic =
+          this.id_clinica !== null && this.id_clinica !== undefined;
+        const hasProfessional =
+          this.id_profissional !== null && this.id_profissional !== undefined;
+
+        if (hasClinic === hasProfessional) {
+          throw new Error(
+            "O horário deve estar associado a uma clínica ou a um profissional.",
+          );
+        }
+      },
+    },
   },
 );

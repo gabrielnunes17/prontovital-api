@@ -7,23 +7,24 @@ export const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 export async function conectarESincronizar() {
-  try {
-    await sequelize.authenticate();
+  await sequelize.authenticate();
 
-    const { initAssociations } = await import("./models/associations.js");
+  const { initAssociations } = await import("./models/associations.js");
 
-    initAssociations();
+  initAssociations();
 
-    await sequelize.sync({ alter: true });
+  await sequelize.sync({ alter: true });
+  await sequelize.query(`
+    ALTER TABLE "horarios"
+    ALTER COLUMN "id_clinica" DROP NOT NULL,
+    ALTER COLUMN "id_profissional" DROP NOT NULL
+  `);
 
-    const { popularEspecialidades } =
-      await import("./controllers/especialidadeController.js");
-    await popularEspecialidades();
+  const { popularEspecialidades } =
+    await import("./controllers/especialidadeController.js");
+  await popularEspecialidades();
 
-    console.log(
-      "✅ Banco de dados PostgreSQL conectado e tabelas sincronizadas!",
-    );
-  } catch (error) {
-    console.error("❌ Erro ao conectar ao banco de dados:", error.message);
-  }
+  console.log(
+    "✅ Banco de dados PostgreSQL conectado e tabelas sincronizadas!",
+  );
 }

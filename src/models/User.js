@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
+import bcrypt from "bcryptjs";
 
 export const User = sequelize.define(
   "User",
@@ -50,5 +51,18 @@ export const User = sequelize.define(
   {
     tableName: "users",
     timestamps: true,
+
+    hooks: {
+      beforeCreate: async (user) => {
+        if (user.senha) {
+          user.senha = await bcrypt.hash(user.senha, 10);
+        }
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed("senha")) {
+          user.senha = await bcrypt.hash(user.senha, 10);
+        }
+      },
+    },
   },
 );

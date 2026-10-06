@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { conectarESincronizar } from "./db.js";
 
+import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import clinicaRoutes from "./routes/clinicaRoutes.js";
 import pacienteRoutes from "./routes/pacienteRoutes.js";
@@ -14,6 +15,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+app.use("/auth", authRoutes);
 app.use("/usuarios", userRoutes);
 app.use("/clinicas", clinicaRoutes);
 app.use("/pacientes", pacienteRoutes);

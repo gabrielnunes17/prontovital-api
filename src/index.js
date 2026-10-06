@@ -4,6 +4,7 @@ import { conectarESincronizar } from "./db.js";
 
 import userRoutes from "./routes/userRoutes.js";
 import clinicaRoutes from "./routes/clinicaRoutes.js";
+import pacienteRoutes from "./routes/pacienteRoutes.js";
 import profissionalRoutes from "./routes/profissionalRoutes.js";
 import especialidadeRoutes from "./routes/especialidadeRoutes.js";
 
@@ -15,11 +16,17 @@ app.use(express.json());
 
 app.use("/usuarios", userRoutes);
 app.use("/clinicas", clinicaRoutes);
+app.use("/pacientes", pacienteRoutes);
 app.use("/profissionais", profissionalRoutes);
 app.use("/especialidades", especialidadeRoutes);
 
-conectarESincronizar();
+try {
+  await conectarESincronizar();
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  });
+} catch (error) {
+  console.error("❌ Erro ao iniciar a API:", error);
+  process.exitCode = 1;
+}

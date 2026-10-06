@@ -5,7 +5,7 @@ import { vincularProfissional } from "../controllers/clinicaController.js";
 const router = Router();
 
 router.get("/", consultarClinicas);
-router.post(
+router.patch(
   "/:id_clinica/profissionais/:id_profissional",
   vincularProfissional,
 );

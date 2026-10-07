@@ -26,3 +26,19 @@ export const verificarToken = (req, res, next) => {
     return res.status(401).json({ erro: "Token inválido ou expirado." });
   }
 };
+
+export const autorizar = (perfisPermitidos) => {
+  return (req, res, next) => {
+    const perfilUsuario = req.usuario.perfil;
+
+    if (!perfisPermitidos.includes(perfilUsuario)) {
+      return res
+        .status(403)
+        .json({
+          erro: "Acesso negado. Seu perfil não tem permissão para esta ação.",
+        });
+    }
+
+    return next();
+  };
+};

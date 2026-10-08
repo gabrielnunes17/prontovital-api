@@ -11,5 +11,11 @@ router.patch(
   autorizar(["clinica", "profissional", "paciente"]),
   userController.atualizarPerfil,
 );
+router.patch(
+  "/perfil/cancelar",
+  verificarToken,
+  autorizar(["clinica", "profissional", "paciente"]),
+  userController.cancelarConta,
+);
 
 export default router;

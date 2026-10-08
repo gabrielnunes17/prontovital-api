@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { Agendamento } from "../models/Agendamento.js";
 import { Clinica } from "../models/Clinica.js";
+import { User } from "../models/User.js";
 import { Horario } from "../models/Horario.js";
 import { Profissional } from "../models/Profissional.js";
 
@@ -33,7 +34,15 @@ export const consultarDisponibilidade = async (req, res) => {
       });
     }
 
-    const profissional = await Profissional.findByPk(id_profissional);
+    const profissional = await Profissional.findByPk(id_profissional, {
+      include: [
+        {
+          model: User,
+          where: { ativo: true, perfil: "profissional" },
+          attributes: [],
+        },
+      ],
+    });
 
     if (!profissional) {
       return res.status(404).json({ erro: "Profissional não encontrado." });
@@ -104,8 +113,24 @@ export const consultarHorario = async (req, res) => {
     }
 
     const proprietario = temClinica
-      ? await Clinica.findByPk(id_clinica)
-      : await Profissional.findByPk(id_profissional);
+      ? await Clinica.findByPk(id_clinica, {
+          include: [
+            {
+              model: User,
+              where: { ativo: true, perfil: "clinica" },
+              attributes: [],
+            },
+          ],
+        })
+      : await Profissional.findByPk(id_profissional, {
+          include: [
+            {
+              model: User,
+              where: { ativo: true, perfil: "profissional" },
+              attributes: [],
+            },
+          ],
+        });
 
     if (!proprietario) {
       return res.status(404).json({

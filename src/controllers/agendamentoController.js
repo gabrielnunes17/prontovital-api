@@ -23,7 +23,15 @@ export const consultarAgendamentosPorPaciente = async (req, res) => {
       return res.status(400).json({ erro: "Informe um id_paciente numérico." });
     }
 
-    const paciente = await Paciente.findByPk(id_paciente);
+    const paciente = await Paciente.findByPk(id_paciente, {
+      include: [
+        {
+          model: User,
+          where: { ativo: true, perfil: "paciente" },
+          attributes: [],
+        },
+      ],
+    });
 
     if (!paciente) {
       return res.status(404).json({ erro: "Paciente não encontrado." });
@@ -41,9 +49,14 @@ export const consultarAgendamentosPorPaciente = async (req, res) => {
       include: [
         {
           model: Profissional,
+          required: true,
           attributes: ["id_profissional"],
           include: [
-            { model: User, attributes: ["nome"] },
+            {
+              model: User,
+              where: { ativo: true, perfil: "profissional" },
+              attributes: ["nome"],
+            },
             {
               model: Especialidade,
               attributes: ["id_especialidade", "nome"],
@@ -52,8 +65,15 @@ export const consultarAgendamentosPorPaciente = async (req, res) => {
         },
         {
           model: Clinica,
+          required: true,
           attributes: ["id_clinica", "bairro"],
-          include: [{ model: User, attributes: ["nome"] }],
+          include: [
+            {
+              model: User,
+              where: { ativo: true, perfil: "clinica" },
+              attributes: ["nome"],
+            },
+          ],
         },
       ],
     });

@@ -255,7 +255,30 @@ async function atualizarPerfil(req, res) {
   }
 }
 
+async function cancelarConta(req, res) {
+  try {
+    const usuario = await User.findByPk(req.usuario.id_user);
+
+    if (!usuario) {
+      return res.status(404).json({ erro: "Usuário não encontrado." });
+    }
+
+    if (usuario.ativo) {
+      await usuario.update({ ativo: false });
+    }
+
+    return res.status(200).json({
+      mensagem: "Conta cancelada com sucesso.",
+      ativo: usuario.ativo,
+    });
+  } catch (error) {
+    console.error("Erro ao cancelar conta:", error);
+    return res.status(500).json({ erro: "Erro interno do servidor." });
+  }
+}
+
 export default {
   criarUsuario,
   atualizarPerfil,
+  cancelarConta,
 };

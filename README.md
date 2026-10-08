@@ -96,3 +96,15 @@ enviados em um objeto com o nome do perfil:
 Para os demais perfis, use `profissional` ou `paciente` no lugar de `clinica`.
 O endpoint atualiza somente o usuário associado ao token e não permite alterar
 seu perfil ou identificador.
+
+## Cancelamento de conta
+
+Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem
+marcar a própria conta como inativa:
+
+```http
+PATCH /usuarios/perfil/cancelar
+Authorization: Bearer <token>
+```
+
+A operação não exclui os dados do usuário; define `ativo` como `false`.

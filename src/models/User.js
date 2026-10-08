@@ -44,7 +44,7 @@ export const User = sequelize.define(
       defaultValue: true,
     },
     perfil: {
-      type: DataTypes.ENUM("paciente", "profissional", "clinica"),
+      type: DataTypes.ENUM("paciente", "profissional", "clinica", "admin"),
       allowNull: false,
     },
   },

@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { consultarClinicas } from "../controllers/clinicaController.js";
+import {
+  consultarClinicas,
+  consultarClinicaPorId,
+} from "../controllers/clinicaController.js";
 import { vincularProfissional } from "../controllers/clinicaController.js";
 import {
   consultarHorario,
@@ -15,18 +18,28 @@ router.get(
   autorizar(["clinica", "admin", "paciente"]),
   consultarClinicas,
 );
+
+router.get(
+  "/:id_clinica",
+  verificarToken,
+  autorizar(["paciente", "admin", "clinica"]),
+  consultarClinicaPorId,
+);
+
 router.get(
   "/:id_clinica/horarios",
   verificarToken,
   autorizar(["clinica", "admin", "profissional"]),
   consultarHorario,
 );
+
 router.post(
   "/:id_clinica/horarios",
   verificarToken,
   autorizar(["clinica"]),
   criarHorario,
 );
+
 router.patch(
   "/:id_clinica/profissionais/:id_profissional",
   verificarToken,

@@ -50,6 +50,10 @@ export const consultarProfissionais = async (req, res) => {
         include: [
           {
             model: User,
+            where: {
+              ativo: true,
+              perfil: "clinica",
+            },
             attributes: ["nome"],
           },
         ],
@@ -110,6 +114,10 @@ export const consultarProfissional = async (req, res) => {
           include: [
             {
               model: User,
+              where: {
+                ativo: true,
+                perfil: "clinica",
+              },
               attributes: ["nome"],
             },
           ],

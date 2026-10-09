@@ -94,3 +94,27 @@ export const vincularProfissional = async (req, res) => {
     });
   }
 };
+
+export const consultarClinicaPorId = async (req, res) => {
+  try {
+    const { id_clinica } = req.params;
+
+    const clinica = await Clinica.findByPk(id_clinica, {
+      include: [
+        {
+          model: User,
+          attributes: { exclude: ["senha"] },
+        },
+      ],
+    });
+
+    if (!clinica) {
+      return res.status(404).json({ erro: "Clínica não encontrada." });
+    }
+
+    return res.status(200).json(clinica);
+  } catch (error) {
+    console.error("Erro ao consultar clínica:", error);
+    return res.status(500).json({ erro: "Erro interno ao buscar clínica." });
+  }
+};

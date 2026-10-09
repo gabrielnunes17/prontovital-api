@@ -8,8 +8,10 @@ import clinicaRoutes from "./routes/clinicaRoutes.js";
 import pacienteRoutes from "./routes/pacienteRoutes.js";
 import profissionalRoutes from "./routes/profissionalRoutes.js";
 import especialidadeRoutes from "./routes/especialidadeRoutes.js";
+import { setupSwagger } from "./swagger.js";
 
 const app = express();
+setupSwagger(app);
 const PORT = 3000;
 
 app.use(cors());

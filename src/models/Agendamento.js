@@ -22,7 +22,7 @@ export const Agendamento = sequelize.define(
       type: DataTypes.TIME,
       allowNull: true,
     },
-    obvervacao: {
+    observacao: {
       type: DataTypes.TEXT,
       allowNull: true,
     },

@@ -68,3 +68,43 @@ O repositório é o núcleo operacional da solução e engloba diversas frentes 
    ```
 
 O servidor ficará disponível em `http://localhost:3000`.
+
+## Atualização de perfil
+
+Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem
+atualizar os próprios dados parcialmente:
+
+```http
+PATCH /usuarios/perfil
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+Os campos comuns do usuário (`nome`, `email`, `senha`, `endereco`, `cidade`,
+`estado` e `telefone`) são enviados na raiz do JSON. Os campos específicos são
+enviados em um objeto com o nome do perfil:
+
+```json
+{
+  "nome": "Nome atualizado",
+  "clinica": {
+    "bairro": "Novo bairro"
+  }
+}
+```
+
+Para os demais perfis, use `profissional` ou `paciente` no lugar de `clinica`.
+O endpoint atualiza somente o usuário associado ao token e não permite alterar
+seu perfil ou identificador.
+
+## Cancelamento de conta
+
+Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem
+marcar a própria conta como inativa:
+
+```http
+PATCH /usuarios/perfil/cancelar
+Authorization: Bearer <token>
+```
+
+A operação não exclui os dados do usuário; define `ativo` como `false`.

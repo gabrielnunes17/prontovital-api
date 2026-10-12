@@ -15,6 +15,136 @@ const paraMinutos = (horario) => {
   return hora * 60 + minuto;
 };
 
+const incluirDetalhesAgendamento = () => [
+  {
+    model: Paciente,
+    required: true,
+    attributes: ["id_paciente"],
+    include: [
+      {
+        model: User,
+        attributes: ["nome"],
+      },
+    ],
+  },
+  {
+    model: Profissional,
+    required: true,
+    attributes: ["id_profissional"],
+    include: [
+      {
+        model: User,
+        attributes: ["nome"],
+      },
+      {
+        model: Especialidade,
+        attributes: ["id_especialidade", "nome"],
+      },
+    ],
+  },
+  {
+    model: Clinica,
+    required: true,
+    attributes: ["id_clinica", "bairro"],
+    include: [
+      {
+        model: User,
+        attributes: ["nome"],
+      },
+    ],
+  },
+];
+
+export const consultarAgendamentos = async (req, res) => {
+  try {
+    const agendamentos = await Agendamento.findAll({
+      order: [
+        ["data_agendamento", "ASC"],
+        ["horario_agendamento", "ASC"],
+      ],
+      include: incluirDetalhesAgendamento(),
+    });
+
+    return res.status(200).json(agendamentos);
+  } catch (error) {
+    console.error("Erro ao consultar todos os agendamentos:", error);
+    return res
+      .status(500)
+      .json({ erro: "Erro interno ao consultar os agendamentos." });
+  }
+};
+
+const consultarAgendamentosPorResponsavel = async (
+  req,
+  res,
+  { id, campoId, modelo, perfil, nomeResponsavel },
+) => {
+  try {
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({ erro: `Informe um ${campoId} numérico.` });
+    }
+
+    if (
+      req.usuario.perfil !== "admin" &&
+      String(req.usuario[campoId]) !== id
+    ) {
+      return res.status(403).json({
+        erro: "Acesso negado. Você só pode consultar seus próprios agendamentos.",
+      });
+    }
+
+    const responsavel = await modelo.findByPk(id, {
+      include: [
+        {
+          model: User,
+          where: { ativo: true, perfil },
+          attributes: [],
+        },
+      ],
+    });
+
+    if (!responsavel) {
+      return res
+        .status(404)
+        .json({ erro: `${nomeResponsavel} não encontrado.` });
+    }
+
+    const agendamentos = await Agendamento.findAll({
+      where: { [campoId]: id },
+      order: [
+        ["data_agendamento", "ASC"],
+        ["horario_agendamento", "ASC"],
+      ],
+      include: incluirDetalhesAgendamento(),
+    });
+
+    return res.status(200).json(agendamentos);
+  } catch (error) {
+    console.error(`Erro ao consultar agendamentos por ${campoId}:`, error);
+    return res
+      .status(500)
+      .json({ erro: "Erro interno ao consultar os agendamentos." });
+  }
+};
+
+export const consultarAgendamentosPorClinica = (req, res) =>
+  consultarAgendamentosPorResponsavel(req, res, {
+    id: req.params.id_clinica,
+    campoId: "id_clinica",
+    modelo: Clinica,
+    perfil: "clinica",
+    nomeResponsavel: "Clínica",
+  });
+
+export const consultarAgendamentosPorProfissional = (req, res) =>
+  consultarAgendamentosPorResponsavel(req, res, {
+    id: req.params.id_profissional,
+    campoId: "id_profissional",
+    modelo: Profissional,
+    perfil: "profissional",
+    nomeResponsavel: "Profissional",
+  });
+
 export const consultarAgendamentosPorPaciente = async (req, res) => {
   try {
     const { id_paciente } = req.params;

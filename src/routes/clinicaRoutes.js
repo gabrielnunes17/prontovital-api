@@ -4,6 +4,7 @@ import {
   consultarClinicaPorId,
 } from "../controllers/clinicaController.js";
 import { vincularProfissional } from "../controllers/clinicaController.js";
+import { consultarAgendamentosPorClinica } from "../controllers/agendamentoController.js";
 import {
   consultarHorario,
   criarHorario,
@@ -72,6 +73,60 @@ router.get(
   verificarToken,
   autorizar(["paciente", "admin", "clinica"]),
   consultarClinicaPorId,
+);
+
+/**
+ * @swagger
+ * /clinicas/{id_clinica}/agendamentos:
+ *   get:
+ *     summary: Consulta os agendamentos de uma clínica
+ *     description: Disponível para administradores e para a própria clínica. Inclui agendamentos cancelados.
+ *     tags: [Agendamentos]
+ *     parameters:
+ *       - in: path
+ *         name: id_clinica
+ *         schema:
+ *           type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Lista de agendamentos da clínica
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id_agendamento: 15
+ *                 status: confirmado
+ *                 data_agendamento: "2026-10-15"
+ *                 horario_agendamento: "14:30:00"
+ *                 id_clinica: 1
+ *                 Paciente:
+ *                   id_paciente: 1
+ *                   User:
+ *                     nome: "Maria Oliveira"
+ *                 Profissional:
+ *                   id_profissional: 2
+ *                   User:
+ *                     nome: "Dra. Ana Costa"
+ *                   Especialidade:
+ *                     id_especialidade: 1
+ *                     nome: "Cardiologia"
+ *                 Clinica:
+ *                   id_clinica: 1
+ *                   bairro: "Boa Viagem"
+ *                   User:
+ *                     nome: "Clínica Saúde Vital"
+ *       400:
+ *         description: ID da clínica inválido
+ *       403:
+ *         description: Acesso negado para esta clínica
+ *       404:
+ *         description: Clínica não encontrada
+ */
+router.get(
+  "/:id_clinica/agendamentos",
+  verificarToken,
+  autorizar(["clinica", "admin"]),
+  consultarAgendamentosPorClinica,
 );
 
 /**

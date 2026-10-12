@@ -9,7 +9,10 @@ import {
   consultarHorario,
   criarHorario,
 } from "../controllers/horarioController.js";
-import { criarAgendamento } from "../controllers/agendamentoController.js";
+import {
+  criarAgendamento,
+  consultarAgendamentosPorProfissional,
+} from "../controllers/agendamentoController.js";
 import { verificarToken, autorizar } from "../middlewares/authMiddleware.js";
 
 const router = Router();
@@ -89,6 +92,49 @@ router.get(
 /**
  * @swagger
  * /profissionais/{id_profissional}/agendamentos:
+ *   get:
+ *     summary: Consulta os agendamentos de um profissional
+ *     description: Disponível para administradores e para o próprio profissional. Inclui agendamentos cancelados.
+ *     tags: [Agendamentos]
+ *     parameters:
+ *       - in: path
+ *         name: id_profissional
+ *         schema:
+ *           type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Lista de agendamentos do profissional
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id_agendamento: 15
+ *                 status: confirmado
+ *                 data_agendamento: "2026-10-15"
+ *                 horario_agendamento: "14:30:00"
+ *                 id_profissional: 2
+ *                 Paciente:
+ *                   id_paciente: 1
+ *                   User:
+ *                     nome: "Maria Oliveira"
+ *                 Profissional:
+ *                   id_profissional: 2
+ *                   User:
+ *                     nome: "Dra. Ana Costa"
+ *                   Especialidade:
+ *                     id_especialidade: 1
+ *                     nome: "Cardiologia"
+ *                 Clinica:
+ *                   id_clinica: 1
+ *                   bairro: "Boa Viagem"
+ *                   User:
+ *                     nome: "Clínica Saúde Vital"
+ *       400:
+ *         description: ID do profissional inválido
+ *       403:
+ *         description: Acesso negado para este profissional
+ *       404:
+ *         description: Profissional não encontrado
  *   post:
  *     summary: Cria um novo agendamento com um profissional
  *     tags: [Profissionais]
@@ -146,6 +192,13 @@ router.post(
   verificarToken,
   autorizar(["paciente"]),
   criarAgendamento,
+);
+
+router.get(
+  "/:id_profissional/agendamentos",
+  verificarToken,
+  autorizar(["profissional", "admin"]),
+  consultarAgendamentosPorProfissional,
 );
 
 /**

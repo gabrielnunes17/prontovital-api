@@ -376,7 +376,7 @@ router.patch(
  * /profissionais/{id_profissional}:
  *   get:
  *     summary: Consulta um profissional específico
- *     description: "Perfis autorizados: admin, paciente, clinica."
+ *     description: "Perfis autorizados: profissional."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -416,7 +416,7 @@ router.patch(
 router.get(
   "/:id_profissional",
   verificarToken,
-  autorizar(["admin", "paciente", "clinica"]),
+  autorizar(["profissional"]),
   consultarProfissional,
 );
 

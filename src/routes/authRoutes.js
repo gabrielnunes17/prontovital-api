@@ -33,23 +33,22 @@ const router = Router();
  *         description: Login realizado com sucesso.
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   description: Token JWT para ser usado no cabeçalho Authorization
- *                 usuario:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     nome:
- *                       type: string
- *                     perfil:
- *                       type: string
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxLCJwZXJmaWwiOiJwYWNpZW50ZSIsImlhdCI6MTY5... (token truncado)"
+ *                   usuario:
+ *                     id: 1
+ *                     nome: "Severino Cavalcanti"
+ *                     perfil: "paciente"
  *       401:
  *         description: Credenciais inválidas (e-mail ou senha incorretos).
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Erro:
+ *                 value:
+ *                   erro: "Credenciais inválidas."
  */
 router.post("/login", login);
 

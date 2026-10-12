@@ -20,14 +20,27 @@ const router = Router();
  *   get:
  *     summary: Retorna a lista de todos os profissionais de saúde
  *     tags: [Profissionais]
- *     description: Acesso permitido para perfis paciente, admin e clinica.
  *     responses:
  *       200:
- *         description: Lista de profissionais retornada com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - id_profissional: 2
+ *                     conselho: "CRM"
+ *                     registro_profissional: "12345"
+ *                     User:
+ *                       nome: "Dra. Ana Costa"
+ *                       telefone: "81977777777"
+ *                     Clinicas:
+ *                       - id_clinica: 1
+ *                         User:
+ *                           nome: "Clínica Saúde Vital"
+ *                     Especialidade:
+ *                       id_especialidade: 1
+ *                       nome: "Cardiologia"
  */
 router.get(
   "/",
@@ -42,21 +55,29 @@ router.get(
  *   get:
  *     summary: Consulta a disponibilidade de horários de um profissional
  *     tags: [Profissionais]
- *     description: Acesso permitido para perfis paciente, admin e clinica.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID numérico do profissional
+ *       - in: query
+ *         name: data
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Data no formato AAAA-MM-DD
  *     responses:
  *       200:
- *         description: Disponibilidade retornada com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Array de strings com os horários disponíveis
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - "09:00"
+ *                   - "09:30"
+ *                   - "10:30"
  */
 router.get(
   "/:id_profissional/disponibilidade",
@@ -71,49 +92,54 @@ router.get(
  *   post:
  *     summary: Cria um novo agendamento com um profissional
  *     tags: [Profissionais]
- *     description: Acesso restrito ao perfil paciente. O ID do paciente é capturado automaticamente pelo token.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID numérico do profissional
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - data_agendamento
- *               - horario_agendamento
- *               - id_clinica
  *             properties:
+ *               id_paciente:
+ *                 type: integer
+ *               id_clinica:
+ *                 type: integer
  *               data_agendamento:
  *                 type: string
- *                 format: date
- *                 description: Data da consulta (YYYY-MM-DD)
  *                 example: "2026-10-15"
  *               horario_agendamento:
  *                 type: string
- *                 description: Horário da consulta (HH:MM ou HH:MM:SS)
- *                 example: "14:30:00"
+ *                 example: "14:30"
  *               observacao:
  *                 type: string
- *                 description: Observações adicionais do paciente
- *                 example: "Primeira consulta, sinto dores nas costas."
- *               id_clinica:
- *                 type: integer
- *                 description: ID da clínica onde será o atendimento
- *                 example: 1
  *     responses:
  *       201:
- *         description: Agendamento criado com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado (apenas paciente pode agendar)
+ *         description: Agendamento criado
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   id_agendamento: 15
+ *                   id_profissional: 2
+ *                   id_paciente: 1
+ *                   id_clinica: 1
+ *                   data_agendamento: "2026-10-15"
+ *                   horario_agendamento: "14:30:00"
+ *                   status: "confirmado"
+ *       409:
+ *         description: Conflito de horário
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Conflito:
+ *                 value:
+ *                   erro: "Já existe um agendamento nesse horário."
  */
 router.post(
   "/:id_profissional/agendamentos",
@@ -126,23 +152,27 @@ router.post(
  * @swagger
  * /profissionais/{id_profissional}/horarios:
  *   get:
- *     summary: Consulta os horários de trabalho cadastrados do profissional
+ *     summary: Consulta os horários de trabalho cadastrados
  *     tags: [Profissionais]
- *     description: Acesso permitido para perfis paciente, admin, clinica e profissional.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID do profissional
  *     responses:
  *       200:
- *         description: Lista de horários retornada com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - id_horario: 2
+ *                     dia_da_semana: 2
+ *                     horario_abertura: "09:00:00"
+ *                     horario_fechamento: "17:00:00"
+ *                     id_profissional: 2
  */
 router.get(
   "/:id_profissional/horarios",
@@ -155,16 +185,14 @@ router.get(
  * @swagger
  * /profissionais/{id_profissional}/horarios:
  *   post:
- *     summary: Cria um novo horário de trabalho para o profissional
+ *     summary: Cria um novo horário de trabalho
  *     tags: [Profissionais]
- *     description: Acesso restrito ao perfil clinica.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID do profissional
  *     requestBody:
  *       required: true
  *       content:
@@ -172,9 +200,11 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
- *               dia_da_semana:
- *                 type: string
- *                 example: "Terça-feira"
+ *               dias_da_semana:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
  *               horario_abertura:
  *                 type: string
  *                 example: "09:00"
@@ -183,11 +213,15 @@ router.get(
  *                 example: "17:00"
  *     responses:
  *       201:
- *         description: Horário criado com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - id_horario: 7
+ *                     dia_da_semana: 1
+ *                     id_profissional: 2
  */
 router.post(
   "/:id_profissional/horarios",
@@ -202,29 +236,29 @@ router.post(
  *   patch:
  *     summary: Vincula uma especialidade a um profissional
  *     tags: [Profissionais]
- *     description: Acesso restrito ao perfil admin.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID do profissional
  *       - in: path
  *         name: id_especialidade
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID da especialidade
  *     responses:
  *       200:
- *         description: Especialidade vinculada com sucesso
- *       404:
- *         description: Profissional ou especialidade não encontrado
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   mensagem: "Especialidade vinculada ao profissional com sucesso."
+ *                   profissional:
+ *                     id_profissional: 2
+ *                     id_especialidade: 1
  */
 router.patch(
   "/:id_profissional/especialidade/:id_especialidade",
@@ -237,25 +271,29 @@ router.patch(
  * @swagger
  * /profissionais/{id_profissional}:
  *   get:
- *     summary: Consulta um profissional específico pelo ID
+ *     summary: Consulta um profissional específico
  *     tags: [Profissionais]
- *     description: Acesso permitido para perfis admin, paciente e clinica.
  *     parameters:
  *       - in: path
  *         name: id_profissional
  *         schema:
  *           type: integer
  *         required: true
- *         description: ID do profissional
  *     responses:
  *       200:
- *         description: Dados do profissional retornados com sucesso
- *       404:
- *         description: Profissional não encontrado
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   id_profissional: 2
+ *                   User:
+ *                     nome: "Dra. Ana Costa"
+ *                   Clinicas:
+ *                     - id_clinica: 1
+ *                       User:
+ *                         nome: "Clínica Saúde Vital"
  */
 router.get(
   "/:id_profissional",

@@ -92,9 +92,9 @@ export async function popularEspecialidades() {
       ];
 
       await Especialidade.bulkCreate(listaPredefinida);
-      console.log("✅ Especialidades predefinidas populadas com sucesso!");
+      console.log("Especialidades predefinidas populadas com sucesso!");
     }
   } catch (error) {
-    console.error("❌ Erro ao popular especialidades:", error);
+    console.error("Erro ao popular especialidades:", error);
   }
 }

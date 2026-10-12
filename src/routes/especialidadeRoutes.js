@@ -10,14 +10,20 @@ const router = Router();
  *   get:
  *     summary: Retorna a lista de todas as especialidades médicas
  *     tags: [Especialidades]
- *     description: Acesso permitido para perfis admin e paciente.
  *     responses:
  *       200:
- *         description: Lista de especialidades retornada com sucesso
- *       401:
- *         description: Token não fornecido ou inválido
- *       403:
- *         description: Acesso negado para o perfil do usuário
+ *         description: Sucesso
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - id_especialidade: 1
+ *                     nome: "Clínica Geral"
+ *                     descricao: "Atendimento médico preventivo..."
+ *                   - id_especialidade: 2
+ *                     nome: "Pediatria"
+ *                     descricao: "Assistência médica a bebês..."
  */
 router.get(
   "/",

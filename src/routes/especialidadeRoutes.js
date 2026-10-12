@@ -9,6 +9,7 @@ const router = Router();
  * /especialidades:
  *   get:
  *     summary: Retorna a lista de todas as especialidades médicas
+ *     description: "Perfis autorizados: admin, paciente."
  *     tags: [Especialidades]
  *     responses:
  *       200:
@@ -20,10 +21,16 @@ const router = Router();
  *                 value:
  *                   - id_especialidade: 1
  *                     nome: "Clínica Geral"
- *                     descricao: "Atendimento médico preventivo..."
+ *                     descricao: "Atendimento médico preventivo, diagnóstico primário e encaminhamentos."
+ *                     status: true
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *                   - id_especialidade: 2
  *                     nome: "Pediatria"
- *                     descricao: "Assistência médica a bebês..."
+ *                     descricao: "Assistência médica a bebês, crianças e adolescentes."
+ *                     status: true
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.get(
   "/",

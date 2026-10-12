@@ -22,21 +22,44 @@ const router = Router();
  * /profissionais:
  *   get:
  *     summary: Retorna a lista de todos os profissionais de saúde
+ *     description: "Perfis autorizados: paciente, admin, clinica."
  *     tags: [Profissionais]
+ *     parameters:
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: Busca por nome do profissional ou da clínica vinculada.
+ *       - in: query
+ *         name: id_especialidade
+ *         schema:
+ *           type: integer
+ *         description: Filtra profissionais pela especialidade e inclui os dados dela na resposta.
  *     responses:
  *       200:
  *         description: Sucesso
  *         content:
  *           application/json:
  *             examples:
- *               Sucesso:
+ *               SucessoComEspecialidade:
+ *                 summary: Exemplo com filtro por especialidade
  *                 value:
  *                   - id_profissional: 2
+ *                     cpf: "98765432100"
  *                     conselho: "CRM"
  *                     registro_profissional: "12345"
+ *                     uf_registro: "PE"
+ *                     id_user: 2
+ *                     id_especialidade: 1
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *                     User:
  *                       nome: "Dra. Ana Costa"
+ *                       email: "ana.costa@email.com"
  *                       telefone: "81977777777"
+ *                       endereco: "Rua Real da Torre, 89"
+ *                       cidade: "Recife"
+ *                       estado: "PE"
  *                     Clinicas:
  *                       - id_clinica: 1
  *                         User:
@@ -57,6 +80,7 @@ router.get(
  * /profissionais/{id_profissional}/disponibilidade:
  *   get:
  *     summary: Consulta a disponibilidade de horários de um profissional
+ *     description: "Perfis autorizados: paciente, admin, clinica."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -94,7 +118,7 @@ router.get(
  * /profissionais/{id_profissional}/agendamentos:
  *   get:
  *     summary: Consulta os agendamentos de um profissional
- *     description: Disponível para administradores e para o próprio profissional. Inclui agendamentos cancelados.
+ *     description: "Perfis autorizados: profissional, admin. O profissional pode consultar apenas os próprios agendamentos. Inclui agendamentos cancelados."
  *     tags: [Agendamentos]
  *     parameters:
  *       - in: path
@@ -112,7 +136,12 @@ router.get(
  *                 status: confirmado
  *                 data_agendamento: "2026-10-15"
  *                 horario_agendamento: "14:30:00"
+ *                 observacao: "Consulta de rotina"
+ *                 id_paciente: 1
  *                 id_profissional: 2
+ *                 id_clinica: 1
+ *                 createdAt: "2026-10-12T12:00:00.000Z"
+ *                 updatedAt: "2026-10-12T12:00:00.000Z"
  *                 Paciente:
  *                   id_paciente: 1
  *                   User:
@@ -137,6 +166,7 @@ router.get(
  *         description: Profissional não encontrado
  *   post:
  *     summary: Cria um novo agendamento com um profissional
+ *     description: "Perfil autorizado: paciente."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -177,7 +207,10 @@ router.get(
  *                   id_clinica: 1
  *                   data_agendamento: "2026-10-15"
  *                   horario_agendamento: "14:30:00"
+ *                   observacao: null
  *                   status: "confirmado"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
  *       409:
  *         description: Conflito de horário
  *         content:
@@ -206,6 +239,7 @@ router.get(
  * /profissionais/{id_profissional}/horarios:
  *   get:
  *     summary: Consulta os horários de trabalho cadastrados
+ *     description: "Perfis autorizados: paciente, admin, clinica, profissional."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -225,7 +259,10 @@ router.get(
  *                     dia_da_semana: 2
  *                     horario_abertura: "09:00:00"
  *                     horario_fechamento: "17:00:00"
+ *                     id_clinica: null
  *                     id_profissional: 2
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.get(
   "/:id_profissional/horarios",
@@ -239,6 +276,7 @@ router.get(
  * /profissionais/{id_profissional}/horarios:
  *   post:
  *     summary: Cria um novo horário de trabalho
+ *     description: "Perfil autorizado: clinica."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -274,7 +312,12 @@ router.get(
  *                 value:
  *                   - id_horario: 7
  *                     dia_da_semana: 1
+ *                     horario_abertura: "09:00:00"
+ *                     horario_fechamento: "17:00:00"
+ *                     id_clinica: null
  *                     id_profissional: 2
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.post(
   "/:id_profissional/horarios",
@@ -288,6 +331,7 @@ router.post(
  * /profissionais/{id_profissional}/especialidade/{id_especialidade}:
  *   patch:
  *     summary: Vincula uma especialidade a um profissional
+ *     description: "Perfil autorizado: admin."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -311,7 +355,14 @@ router.post(
  *                   mensagem: "Especialidade vinculada ao profissional com sucesso."
  *                   profissional:
  *                     id_profissional: 2
+ *                     cpf: "98765432100"
+ *                     conselho: "CRM"
+ *                     registro_profissional: "12345"
+ *                     uf_registro: "PE"
+ *                     id_user: 2
  *                     id_especialidade: 1
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:30:00.000Z"
  */
 router.patch(
   "/:id_profissional/especialidade/:id_especialidade",
@@ -325,6 +376,7 @@ router.patch(
  * /profissionais/{id_profissional}:
  *   get:
  *     summary: Consulta um profissional específico
+ *     description: "Perfis autorizados: admin, paciente, clinica."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -341,8 +393,21 @@ router.patch(
  *               Sucesso:
  *                 value:
  *                   id_profissional: 2
+ *                   cpf: "98765432100"
+ *                   conselho: "CRM"
+ *                   registro_profissional: "12345"
+ *                   uf_registro: "PE"
+ *                   id_user: 2
+ *                   id_especialidade: 1
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
  *                   User:
  *                     nome: "Dra. Ana Costa"
+ *                     email: "ana.costa@email.com"
+ *                     telefone: "81977777777"
+ *                     endereco: "Rua Real da Torre, 89"
+ *                     cidade: "Recife"
+ *                     estado: "PE"
  *                   Clinicas:
  *                     - id_clinica: 1
  *                       User:

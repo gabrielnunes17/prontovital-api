@@ -16,6 +16,7 @@ const router = Router();
  * /pacientes:
  *   get:
  *     summary: Retorna a lista de todos os pacientes ativos
+ *     description: "Perfis autorizados: admin."
  *     tags: [Pacientes]
  *     responses:
  *       200:
@@ -27,11 +28,24 @@ const router = Router();
  *                 value:
  *                   - id_paciente: 1
  *                     cpf: "12345678901"
- *                     data_nascimento: "1990-05-20"
+ *                     data_nascimento: "1990-05-20T00:00:00.000Z"
+ *                     sexo: "Masculino"
+ *                     observacoes: "Alergia a dipirona"
+ *                     id_user: 1
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *                     User:
+ *                       id_user: 1
  *                       nome: "Severino Cavalcanti"
  *                       email: "severino@email.com"
+ *                       endereco: "Rua do Sol, 123"
+ *                       cidade: "Recife"
+ *                       estado: "PE"
  *                       telefone: "81999999999"
+ *                       ativo: true
+ *                       perfil: "paciente"
+ *                       createdAt: "2026-10-12T12:00:00.000Z"
+ *                       updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.get("/", verificarToken, autorizar(["admin"]), consultarPacientes);
 
@@ -40,6 +54,7 @@ router.get("/", verificarToken, autorizar(["admin"]), consultarPacientes);
  * /pacientes/{id_paciente}:
  *   get:
  *     summary: Consulta um paciente pelo ID
+ *     description: "Perfis autorizados: paciente."
  *     tags: [Pacientes]
  *     parameters:
  *       - in: path
@@ -57,9 +72,24 @@ router.get("/", verificarToken, autorizar(["admin"]), consultarPacientes);
  *                 value:
  *                   id_paciente: 1
  *                   cpf: "12345678901"
+ *                   data_nascimento: "1990-05-20T00:00:00.000Z"
+ *                   sexo: "Masculino"
+ *                   observacoes: "Alergia a dipirona"
+ *                   id_user: 1
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
  *                   User:
+ *                     id_user: 1
  *                     nome: "Severino Cavalcanti"
  *                     email: "severino@email.com"
+ *                     endereco: "Rua do Sol, 123"
+ *                     cidade: "Recife"
+ *                     estado: "PE"
+ *                     telefone: "81999999999"
+ *                     ativo: true
+ *                     perfil: "paciente"
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *       404:
  *         description: Paciente não encontrado
  *         content:
@@ -81,6 +111,7 @@ router.get(
  * /pacientes/{id_paciente}/agendamentos:
  *   get:
  *     summary: Consulta todos os agendamentos de um paciente
+ *     description: "Perfis autorizados: paciente, admin, profissional, clinica."
  *     tags: [Pacientes]
  *     parameters:
  *       - in: path
@@ -100,6 +131,12 @@ router.get(
  *                     status: "confirmado"
  *                     data_agendamento: "2026-10-15"
  *                     horario_agendamento: "14:30:00"
+ *                     observacao: "Consulta de rotina"
+ *                     id_paciente: 1
+ *                     id_profissional: 2
+ *                     id_clinica: 1
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *                     Profissional:
  *                       id_profissional: 2
  *                       User:
@@ -125,6 +162,7 @@ router.get(
  * /pacientes/{id_paciente}/agendamentos/{id_agendamento}/cancelar:
  *   patch:
  *     summary: Cancela um agendamento específico do paciente
+ *     description: "Perfis autorizados: paciente, admin, clinica."
  *     tags: [Pacientes]
  *     parameters:
  *       - in: path
@@ -147,6 +185,14 @@ router.get(
  *                 value:
  *                   id_agendamento: 15
  *                   status: "cancelado"
+ *                   data_agendamento: "2026-10-15"
+ *                   horario_agendamento: "14:30:00"
+ *                   observacao: "Consulta de rotina"
+ *                   id_paciente: 1
+ *                   id_profissional: 2
+ *                   id_clinica: 1
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:30:00.000Z"
  *       404:
  *         description: Agendamento não encontrado
  *         content:

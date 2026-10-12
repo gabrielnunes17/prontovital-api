@@ -9,6 +9,7 @@ const router = express.Router();
  * /usuarios:
  *   post:
  *     summary: Cria um novo usuário (Cadastro de conta e perfil)
+ *     description: Acesso público; não exige autenticação nem perfil.
  *     tags: [Usuários]
  *     security: []
  *     requestBody:
@@ -69,13 +70,60 @@ const router = express.Router();
  *           application/json:
  *             examples:
  *               SucessoPaciente:
+ *                 summary: Cadastro de paciente realizado com sucesso
  *                 value:
  *                   id_user: 1
  *                   nome: "Severino Cavalcanti"
  *                   email: "severino@email.com"
+ *                   endereco: "Rua do Sol, 123"
+ *                   cidade: "Recife"
+ *                   estado: "PE"
+ *                   telefone: "81999999999"
+ *                   ativo: true
  *                   perfil: "paciente"
  *                   id_paciente: 1
  *                   cpf: "12345678901"
+ *                   data_nascimento: "1990-05-20T00:00:00.000Z"
+ *                   sexo: "Masculino"
+ *                   observacoes: "Alergia a dipirona"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
+ *               SucessoProfissional:
+ *                 summary: Cadastro de profissional realizado com sucesso
+ *                 value:
+ *                   id_user: 2
+ *                   nome: "Dra. Ana Costa"
+ *                   email: "ana.costa@email.com"
+ *                   endereco: "Rua Real da Torre, 89"
+ *                   cidade: "Recife"
+ *                   estado: "PE"
+ *                   telefone: "81977777777"
+ *                   ativo: true
+ *                   perfil: "profissional"
+ *                   id_profissional: 1
+ *                   cpf: "98765432100"
+ *                   conselho: "CRM"
+ *                   registro_profissional: "12345"
+ *                   uf_registro: "PE"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
+ *               SucessoClinica:
+ *                 summary: Cadastro de clínica realizado com sucesso
+ *                 value:
+ *                   id_user: 3
+ *                   nome: "Clínica Saúde Vital"
+ *                   email: "contato@saudevital.com"
+ *                   endereco: "Av. Conselheiro Aguiar, 123"
+ *                   cidade: "Recife"
+ *                   estado: "PE"
+ *                   telefone: "8133334444"
+ *                   ativo: true
+ *                   perfil: "clinica"
+ *                   id_clinica: 1
+ *                   cnpj: "12345678000199"
+ *                   bairro: "Boa Viagem"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
  *       400:
  *         description: Erro de validação
  *         content:
@@ -93,6 +141,7 @@ router.post("/", userController.criarUsuario);
  * /usuarios/perfil:
  *   patch:
  *     summary: Atualiza os dados do perfil do usuário logado
+ *     description: "Perfis autorizados: clinica, profissional, paciente."
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -112,19 +161,75 @@ router.post("/", userController.criarUsuario);
  *                 telefone: "8133334444"
  *                 clinica:
  *                   bairro: "Boa Viagem"
+ *             AtualizarProfissional:
+ *               summary: Atualização de Profissional
+ *               value:
+ *                 telefone: "81977777777"
+ *                 profissional:
+ *                   conselho: "CRM"
+ *                   registro_profissional: "12345"
+ *                   uf_registro: "PE"
  *     responses:
  *       200:
  *         description: Perfil atualizado com sucesso
  *         content:
  *           application/json:
  *             examples:
- *               Sucesso:
+ *               SucessoPaciente:
+ *                 summary: Perfil de paciente atualizado com sucesso
  *                 value:
  *                   id_user: 1
  *                   nome: "Severino Cavalcanti Atualizado"
+ *                   email: "severino@email.com"
+ *                   endereco: "Rua do Sol, 123"
  *                   cidade: "Olinda"
+ *                   estado: "PE"
+ *                   telefone: "81999999999"
+ *                   ativo: true
+ *                   perfil: "paciente"
  *                   id_paciente: 1
+ *                   cpf: "12345678901"
+ *                   data_nascimento: "1990-05-20T00:00:00.000Z"
+ *                   sexo: "Masculino"
  *                   observacoes: "Alergia a dipirona e intolerância a lactose"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:30:00.000Z"
+ *               SucessoProfissional:
+ *                 summary: Perfil de profissional atualizado com sucesso
+ *                 value:
+ *                   id_user: 2
+ *                   nome: "Dra. Ana Costa"
+ *                   email: "ana.costa@email.com"
+ *                   endereco: "Rua Real da Torre, 89"
+ *                   cidade: "Recife"
+ *                   estado: "PE"
+ *                   telefone: "81977777777"
+ *                   ativo: true
+ *                   perfil: "profissional"
+ *                   id_profissional: 1
+ *                   cpf: "98765432100"
+ *                   conselho: "CRM"
+ *                   registro_profissional: "12345"
+ *                   uf_registro: "PE"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:30:00.000Z"
+ *               SucessoClinica:
+ *                 summary: Perfil de clínica atualizado com sucesso
+ *                 value:
+ *                   id_user: 3
+ *                   nome: "Clínica Saúde Vital"
+ *                   email: "contato@saudevital.com"
+ *                   endereco: "Av. Conselheiro Aguiar, 123"
+ *                   cidade: "Recife"
+ *                   estado: "PE"
+ *                   telefone: "8133334444"
+ *                   ativo: true
+ *                   perfil: "clinica"
+ *                   id_clinica: 1
+ *                   cnpj: "12345678000199"
+ *                   bairro: "Boa Viagem"
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:30:00.000Z"
  *       400:
  *         description: Campos não permitidos ou erro de validação
  *         content:
@@ -146,6 +251,7 @@ router.patch(
  * /usuarios/perfil/cancelar:
  *   patch:
  *     summary: Cancela (desativa) a conta do usuário logado
+ *     description: "Perfis autorizados: clinica, profissional, paciente."
  *     tags: [Usuários]
  *     responses:
  *       200:

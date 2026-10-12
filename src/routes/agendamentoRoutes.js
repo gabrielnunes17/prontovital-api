@@ -9,7 +9,7 @@ const router = Router();
  * /agendamentos:
  *   get:
  *     summary: Consulta todos os agendamentos
- *     description: Rota disponível apenas para administradores. Inclui agendamentos cancelados.
+ *     description: "Perfis autorizados: admin. Inclui agendamentos cancelados."
  *     tags: [Agendamentos]
  *     responses:
  *       200:
@@ -25,6 +25,8 @@ const router = Router();
  *                 id_paciente: 1
  *                 id_profissional: 2
  *                 id_clinica: 1
+ *                 createdAt: "2026-10-12T12:00:00.000Z"
+ *                 updatedAt: "2026-10-12T12:00:00.000Z"
  *                 Paciente:
  *                   id_paciente: 1
  *                   User:

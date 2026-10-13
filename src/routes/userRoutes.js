@@ -141,7 +141,7 @@ router.post("/", userController.criarUsuario);
  * /usuarios/perfil:
  *   patch:
  *     summary: Atualiza os dados do perfil do usuário logado
- *     description: "Perfis autorizados: clinica, profissional, paciente."
+ *     description: "Perfis autorizados: admin, clinica, profissional, paciente."
  *     tags: [Usuários]
  *     requestBody:
  *       required: true
@@ -242,7 +242,7 @@ router.post("/", userController.criarUsuario);
 router.patch(
   "/perfil",
   verificarToken,
-  autorizar(["clinica", "profissional", "paciente"]),
+  autorizar(["admin", "clinica", "profissional", "paciente"]),
   userController.atualizarPerfil,
 );
 
@@ -251,7 +251,7 @@ router.patch(
  * /usuarios/perfil/cancelar:
  *   patch:
  *     summary: Cancela (desativa) a conta do usuário logado
- *     description: "Perfis autorizados: clinica, profissional, paciente."
+ *     description: "Perfis autorizados: admin, clinica, profissional, paciente."
  *     tags: [Usuários]
  *     responses:
  *       200:
@@ -267,7 +267,7 @@ router.patch(
 router.patch(
   "/perfil/cancelar",
   verificarToken,
-  autorizar(["clinica", "profissional", "paciente"]),
+  autorizar(["admin", "clinica", "profissional", "paciente"]),
   userController.cancelarConta,
 );
 

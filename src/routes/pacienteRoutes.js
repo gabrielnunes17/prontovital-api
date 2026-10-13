@@ -54,7 +54,7 @@ router.get("/", verificarToken, autorizar(["admin"]), consultarPacientes);
  * /pacientes/{id_paciente}:
  *   get:
  *     summary: Consulta um paciente pelo ID
- *     description: "Perfis autorizados: paciente."
+ *     description: "Perfis autorizados: paciente, admin."
  *     tags: [Pacientes]
  *     parameters:
  *       - in: path
@@ -102,7 +102,7 @@ router.get("/", verificarToken, autorizar(["admin"]), consultarPacientes);
 router.get(
   "/:id_paciente",
   verificarToken,
-  autorizar(["paciente"]),
+  autorizar(["paciente", "admin"]),
   consultarPacientePorId,
 );
 

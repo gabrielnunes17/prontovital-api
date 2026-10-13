@@ -206,7 +206,7 @@ router.get(
  * /clinicas/{id_clinica}/horarios:
  *   post:
  *     summary: Cria novos horários de funcionamento para a clínica
- *     description: "Perfil autorizado: clinica."
+ *     description: "Perfis autorizados: clinica, admin."
  *     tags: [Clínicas]
  *     parameters:
  *       - in: path
@@ -257,7 +257,7 @@ router.get(
 router.post(
   "/:id_clinica/horarios",
   verificarToken,
-  autorizar(["clinica"]),
+  autorizar(["clinica", "admin"]),
   criarHorario,
 );
 

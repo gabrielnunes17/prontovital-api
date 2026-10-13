@@ -166,7 +166,7 @@ router.get(
  *         description: Profissional não encontrado
  *   post:
  *     summary: Cria um novo agendamento com um profissional
- *     description: "Perfil autorizado: paciente."
+ *     description: "Perfis autorizados: paciente, admin."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -223,7 +223,7 @@ router.get(
 router.post(
   "/:id_profissional/agendamentos",
   verificarToken,
-  autorizar(["paciente"]),
+  autorizar(["paciente", "admin"]),
   criarAgendamento,
 );
 
@@ -276,7 +276,7 @@ router.get(
  * /profissionais/{id_profissional}/horarios:
  *   post:
  *     summary: Cria um novo horário de trabalho
- *     description: "Perfil autorizado: clinica."
+ *     description: "Perfis autorizados: clinica, admin."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -322,7 +322,7 @@ router.get(
 router.post(
   "/:id_profissional/horarios",
   verificarToken,
-  autorizar(["clinica"]),
+  autorizar(["clinica", "admin"]),
   criarHorario,
 );
 
@@ -376,7 +376,7 @@ router.patch(
  * /profissionais/{id_profissional}:
  *   get:
  *     summary: Consulta um profissional específico
- *     description: "Perfis autorizados: profissional."
+ *     description: "Perfis autorizados: profissional, admin."
  *     tags: [Profissionais]
  *     parameters:
  *       - in: path
@@ -416,7 +416,7 @@ router.patch(
 router.get(
   "/:id_profissional",
   verificarToken,
-  autorizar(["profissional"]),
+  autorizar(["profissional", "admin"]),
   consultarProfissional,
 );
 

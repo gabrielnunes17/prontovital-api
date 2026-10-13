@@ -33,6 +33,16 @@ O repositório é o núcleo operacional da solução e engloba diversas frentes 
 - **Sequelize ORM:** mapeamento e comunicação com o banco de dados.
 - **PostgreSQL:** banco de dados relacional.
 - **Docker Compose:** execução do container do PostgreSQL.
+- **JWT (JSON Web Token) & Bcryptjs:** criptografia de senhas, gerenciamento de sessões seguras e controle de acesso baseado em perfis (Role-Based Access Control).
+- **Swagger (OpenAPI 3.0):** documentação interativa e padronizada dos endpoints (`swagger-jsdoc` e `swagger-ui-express`).
+
+## 📚 Documentação da API (Swagger)
+
+A API possui uma documentação interativa completa, detalhando todos os endpoints, parâmetros de busca, payloads de requisição (com exemplos dinâmicos por entidade) e modelos de resposta.
+
+🔗 **Acesse a documentação em produção:** [Prontovital API Docs - Swagger UI](https://prontovital-api.onrender.com/api-docs/)
+
+_(Para acessar a documentação localmente, inicie o servidor e acesse `http://localhost:3000/api-docs`)_
 
 ## ▶️ Como Executar
 
@@ -49,10 +59,11 @@ O repositório é o núcleo operacional da solução e engloba diversas frentes 
    npm install
    ```
 
-2. Crie um arquivo `.env` na raiz do projeto com a URL de conexão do banco:
+2. Crie um arquivo `.env` na raiz do projeto com a URL de conexão do banco e o secret do JWT:
 
    ```env
    DATABASE_URL=postgres://prontovital_user:prontovital_pass@localhost:5432/prontovital_db
+   JWT_SECRET=sua_chave_secreta_aqui
    ```
 
 3. Suba o container do PostgreSQL:
@@ -69,10 +80,15 @@ O repositório é o núcleo operacional da solução e engloba diversas frentes 
 
 O servidor ficará disponível em `http://localhost:3000`.
 
-## Atualização de perfil
+---
 
-Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem
-atualizar os próprios dados parcialmente:
+## 🛠️ Exemplos de Uso Manual
+
+_Nota: Para testar os endpoints de forma visual, recomendamos utilizar o [Swagger](#-documentação-da-api-swagger)._
+
+### Atualização de perfil
+
+Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem atualizar os próprios dados parcialmente:
 
 ```http
 PATCH /usuarios/perfil
@@ -80,9 +96,7 @@ Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-Os campos comuns do usuário (`nome`, `email`, `senha`, `endereco`, `cidade`,
-`estado` e `telefone`) são enviados na raiz do JSON. Os campos específicos são
-enviados em um objeto com o nome do perfil:
+Os campos comuns do usuário (`nome`, `email`, `senha`, `endereco`, `cidade`, `estado` e `telefone`) são enviados na raiz do JSON. Os campos específicos são enviados em um objeto com o nome do perfil:
 
 ```json
 {
@@ -93,14 +107,11 @@ enviados em um objeto com o nome do perfil:
 }
 ```
 
-Para os demais perfis, use `profissional` ou `paciente` no lugar de `clinica`.
-O endpoint atualiza somente o usuário associado ao token e não permite alterar
-seu perfil ou identificador.
+Para os demais perfis, use `profissional` ou `paciente` no lugar de `clinica`. O endpoint atualiza somente o usuário associado ao token e não permite alterar seu perfil ou identificador.
 
-## Cancelamento de conta
+### Cancelamento de conta
 
-Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem
-marcar a própria conta como inativa:
+Usuários autenticados com perfil `clinica`, `profissional` ou `paciente` podem marcar a própria conta como inativa:
 
 ```http
 PATCH /usuarios/perfil/cancelar

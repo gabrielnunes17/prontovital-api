@@ -11,7 +11,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "https://prontovital-api.onrender.com/",
         description: "Servidor de Desenvolvimento",
       },
     ],
@@ -38,6 +38,6 @@ const swaggerDocs = swaggerJSDoc(swaggerOptions);
 export const setupSwagger = (app) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
   console.log(
-    "📄 Documentação Swagger disponível em http://localhost:3000/api-docs",
+    "📄 Documentação Swagger disponível em https://prontovital-api.onrender.com/api-docs",
   );
 };

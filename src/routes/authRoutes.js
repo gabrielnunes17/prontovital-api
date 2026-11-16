@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login } from "../controllers/authController.js";
+import { login, refresh, logout } from "../controllers/authController.js";
 
 const router = Router();
 
@@ -76,5 +76,52 @@ const router = Router();
  *                   erro: "Credenciais inválidas."
  */
 router.post("/login", login);
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Renova o token de acesso usando um refresh token válido
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refresh_token
+ *             properties:
+ *               refresh_token:
+ *                 type: string
+ *                 example: a1b2c3d4e5f6...
+ *     responses:
+ *       200:
+ *         description: Novo par de tokens gerado com sucesso
+ *       400:
+ *         description: Refresh token não informado
+ *       401:
+ *         description: Sessão expirada ou usuário inativo
+ */
+router.post("/refresh", refresh);
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Revoga o refresh token e encerra a sessão no dispositivo
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refresh_token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Logout realizado com sucesso
+ */
+router.post("/logout", logout);
 
 export default router;

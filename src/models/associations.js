@@ -6,6 +6,8 @@ import { Paciente } from "./Paciente.js";
 import { ClinicaProfissional } from "./ClinicaProfissional.js";
 import { Especialidade } from "./Especialidade.js";
 import { Agendamento } from "./Agendamento.js";
+import { RefreshToken } from "./RefreshToken.js";
+import { Dispositivo } from "./Dispositivo.js";
 
 export function initAssociations() {
   // Relacionamento User e Clinica
@@ -123,5 +125,29 @@ export function initAssociations() {
   Agendamento.belongsTo(Profissional, {
     foreignKey: "id_profissional",
     targetKey: "id_profissional",
+  });
+
+  // Relacionamento User e RefreshToken
+  User.hasMany(RefreshToken, {
+    foreignKey: "id_user",
+    sourceKey: "id_user",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  RefreshToken.belongsTo(User, {
+    foreignKey: "id_user",
+    targetKey: "id_user",
+  });
+
+  // Relacionamento User e Dispositivo (Push Notifications)
+  User.hasMany(Dispositivo, {
+    foreignKey: "id_user",
+    sourceKey: "id_user",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Dispositivo.belongsTo(User, {
+    foreignKey: "id_user",
+    targetKey: "id_user",
   });
 }

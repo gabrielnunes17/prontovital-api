@@ -8,6 +8,7 @@ const router = Router();
  * /auth/login:
  *   post:
  *     summary: Autentica um usuário no sistema e gera o par de tokens
+ *     description: Acesso público; não exige autenticação nem perfil.
  *     tags: [Autenticação]
  *     security: []
  *     requestBody:
@@ -44,6 +45,35 @@ const router = Router();
  *                     nome: "Severino Cavalcanti"
  *                     perfil: "paciente"
  *                     id_paciente: 1
+ *               SucessoProfissional:
+ *                 summary: Login de Profissional
+ *                 value:
+ *                   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   refresh_token: "b2c3d4e5f6789012..."
+ *                   usuario:
+ *                     id: 2
+ *                     nome: "Dra. Ana Costa"
+ *                     perfil: "profissional"
+ *                     id_profissional: 1
+ *               SucessoClinica:
+ *                 summary: Login de Clínica
+ *                 value:
+ *                   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   refresh_token: "c3d4e5f678901234..."
+ *                   usuario:
+ *                     id: 3
+ *                     nome: "Clínica Saúde Vital"
+ *                     perfil: "clinica"
+ *                     id_clinica: 1
+ *               SucessoAdmin:
+ *                 summary: Login de Administrador
+ *                 value:
+ *                   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                   refresh_token: "d4e5f67890123456..."
+ *                   usuario:
+ *                     id: 4
+ *                     nome: "Administrador ProntoVital"
+ *                     perfil: "admin"
  *       401:
  *         description: Credenciais inválidas ou conta inativa.
  *         content:
@@ -60,6 +90,7 @@ router.post("/login", login);
  * /auth/refresh:
  *   post:
  *     summary: Renova o token de acesso usando um refresh token válido (com rotação)
+ *     description: Acesso público; não exige token Bearer ativo no cabeçalho.
  *     tags: [Autenticação]
  *     security: []
  *     requestBody:
@@ -101,6 +132,7 @@ router.post("/refresh", refresh);
  * /auth/logout:
  *   post:
  *     summary: Revoga o refresh token e encerra a sessão no dispositivo
+ *     description: Acesso público; não exige token Bearer ativo no cabeçalho.
  *     tags: [Autenticação]
  *     security: []
  *     requestBody:

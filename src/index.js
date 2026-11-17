@@ -9,6 +9,7 @@ import pacienteRoutes from "./routes/pacienteRoutes.js";
 import profissionalRoutes from "./routes/profissionalRoutes.js";
 import especialidadeRoutes from "./routes/especialidadeRoutes.js";
 import dispositivoRoutes from "./routes/dispositivoRoutes.js";
+import agendamentoRoutes from "./routes/agendamentoRoutes.js";
 import { setupSwagger } from "./swagger.js";
 
 import { iniciarJobLembretes } from "./jobs/lembreteAgendamentoJob.js";
@@ -27,6 +28,7 @@ app.use("/pacientes", pacienteRoutes);
 app.use("/profissionais", profissionalRoutes);
 app.use("/especialidades", especialidadeRoutes);
 app.use("/dispositivos", dispositivoRoutes);
+app.use("/agendamentos", agendamentoRoutes);
 
 try {
   await conectarESincronizar();

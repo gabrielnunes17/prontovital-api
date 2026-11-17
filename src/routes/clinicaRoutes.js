@@ -4,6 +4,7 @@ import {
   consultarClinicaPorId,
 } from "../controllers/clinicaController.js";
 import { vincularProfissional } from "../controllers/clinicaController.js";
+import { consultarAgendamentosPorClinica } from "../controllers/agendamentoController.js";
 import {
   consultarHorario,
   criarHorario,
@@ -17,7 +18,15 @@ const router = Router();
  * /clinicas:
  *   get:
  *     summary: Retorna a lista de todas as clínicas
+ *     description: "Perfis autorizados: clinica, admin, paciente."
  *     tags: [Clínicas]
+ *     parameters:
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Busca clínicas pelo nome ou pelo bairro.
  *     responses:
  *       200:
  *         description: Sucesso
@@ -29,8 +38,15 @@ const router = Router();
  *                   - id_clinica: 1
  *                     cnpj: "12345678000199"
  *                     bairro: "Boa Viagem"
+ *                     id_user: 3
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *                     User:
  *                       nome: "Clínica Saúde Vital"
+ *                       email: "contato@saudevital.com"
+ *                       endereco: "Av. Conselheiro Aguiar, 123"
+ *                       cidade: "Recife"
+ *                       estado: "PE"
  *                       telefone: "8133334444"
  */
 router.get(
@@ -45,6 +61,7 @@ router.get(
  * /clinicas/{id_clinica}:
  *   get:
  *     summary: Consulta uma clínica pelo ID
+ *     description: "Perfis autorizados: paciente, admin, clinica."
  *     tags: [Clínicas]
  *     parameters:
  *       - in: path
@@ -62,8 +79,22 @@ router.get(
  *                 value:
  *                   id_clinica: 1
  *                   cnpj: "12345678000199"
+ *                   bairro: "Boa Viagem"
+ *                   id_user: 3
+ *                   createdAt: "2026-10-12T12:00:00.000Z"
+ *                   updatedAt: "2026-10-12T12:00:00.000Z"
  *                   User:
+ *                     id_user: 3
  *                     nome: "Clínica Saúde Vital"
+ *                     email: "contato@saudevital.com"
+ *                     endereco: "Av. Conselheiro Aguiar, 123"
+ *                     cidade: "Recife"
+ *                     estado: "PE"
+ *                     telefone: "8133334444"
+ *                     ativo: true
+ *                     perfil: "clinica"
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  *       404:
  *         description: Clínica não encontrada
  */
@@ -76,9 +107,69 @@ router.get(
 
 /**
  * @swagger
+ * /clinicas/{id_clinica}/agendamentos:
+ *   get:
+ *     summary: Consulta os agendamentos de uma clínica
+ *     description: "Perfis autorizados: clinica, admin. A clínica pode consultar apenas os próprios agendamentos. Inclui agendamentos cancelados."
+ *     tags: [Agendamentos]
+ *     parameters:
+ *       - in: path
+ *         name: id_clinica
+ *         schema:
+ *           type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Lista de agendamentos da clínica
+ *         content:
+ *           application/json:
+ *             example:
+ *               - id_agendamento: 15
+ *                 status: confirmado
+ *                 data_agendamento: "2026-10-15"
+ *                 horario_agendamento: "14:30:00"
+ *                 observacao: "Consulta de rotina"
+ *                 id_paciente: 1
+ *                 id_profissional: 2
+ *                 id_clinica: 1
+ *                 createdAt: "2026-10-12T12:00:00.000Z"
+ *                 updatedAt: "2026-10-12T12:00:00.000Z"
+ *                 Paciente:
+ *                   id_paciente: 1
+ *                   User:
+ *                     nome: "Maria Oliveira"
+ *                 Profissional:
+ *                   id_profissional: 2
+ *                   User:
+ *                     nome: "Dra. Ana Costa"
+ *                   Especialidade:
+ *                     id_especialidade: 1
+ *                     nome: "Cardiologia"
+ *                 Clinica:
+ *                   id_clinica: 1
+ *                   bairro: "Boa Viagem"
+ *                   User:
+ *                     nome: "Clínica Saúde Vital"
+ *       400:
+ *         description: ID da clínica inválido
+ *       403:
+ *         description: Acesso negado para esta clínica
+ *       404:
+ *         description: Clínica não encontrada
+ */
+router.get(
+  "/:id_clinica/agendamentos",
+  verificarToken,
+  autorizar(["clinica", "admin"]),
+  consultarAgendamentosPorClinica,
+);
+
+/**
+ * @swagger
  * /clinicas/{id_clinica}/horarios:
  *   get:
  *     summary: Consulta os horários de funcionamento de uma clínica
+ *     description: "Perfis autorizados: clinica, admin, profissional."
  *     tags: [Clínicas]
  *     parameters:
  *       - in: path
@@ -99,6 +190,9 @@ router.get(
  *                     horario_abertura: "08:00:00"
  *                     horario_fechamento: "18:00:00"
  *                     id_clinica: 1
+ *                     id_profissional: null
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.get(
   "/:id_clinica/horarios",
@@ -112,6 +206,7 @@ router.get(
  * /clinicas/{id_clinica}/horarios:
  *   post:
  *     summary: Cria novos horários de funcionamento para a clínica
+ *     description: "Perfis autorizados: clinica, admin."
  *     tags: [Clínicas]
  *     parameters:
  *       - in: path
@@ -145,11 +240,24 @@ router.get(
  *     responses:
  *       201:
  *         description: Sucesso (Retorna array de horários criados)
+ *         content:
+ *           application/json:
+ *             examples:
+ *               Sucesso:
+ *                 value:
+ *                   - id_horario: 7
+ *                     dia_da_semana: 1
+ *                     horario_abertura: "08:00:00"
+ *                     horario_fechamento: "18:00:00"
+ *                     id_clinica: 1
+ *                     id_profissional: null
+ *                     createdAt: "2026-10-12T12:00:00.000Z"
+ *                     updatedAt: "2026-10-12T12:00:00.000Z"
  */
 router.post(
   "/:id_clinica/horarios",
   verificarToken,
-  autorizar(["clinica"]),
+  autorizar(["clinica", "admin"]),
   criarHorario,
 );
 
@@ -158,6 +266,7 @@ router.post(
  * /clinicas/{id_clinica}/profissionais/{id_profissional}:
  *   patch:
  *     summary: Vincula um profissional a uma clínica
+ *     description: "Perfil autorizado: admin."
  *     tags: [Clínicas]
  *     parameters:
  *       - in: path

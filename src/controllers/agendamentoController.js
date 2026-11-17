@@ -7,6 +7,7 @@ import { Horario } from "../models/Horario.js";
 import { Paciente } from "../models/Paciente.js";
 import { Profissional } from "../models/Profissional.js";
 import { User } from "../models/User.js";
+import { enviarNotificacaoUsuario } from "../services/pushService.js";
 
 const DURACAO_AGENDAMENTO_MINUTOS = 30;
 
@@ -107,6 +108,18 @@ export const cancelarAgendamento = async (req, res) => {
 
     agendamento.status = "cancelado";
     await agendamento.save({ fields: ["status"] });
+
+    const paciente = await Paciente.findByPk(id_paciente);
+    if (paciente) {
+      await enviarNotificacaoUsuario(paciente.id_user, {
+        titulo: "Agendamento Cancelado",
+        corpo: `Sua consulta do dia ${agendamento.data_agendamento} às ${agendamento.horario_agendamento.slice(0, 5)} foi cancelada.`,
+        dados: {
+          tipo: "cancelamento",
+          id_agendamento: agendamento.id_agendamento,
+        },
+      });
+    }
 
     return res.status(200).json(agendamento);
   } catch (error) {

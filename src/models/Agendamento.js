@@ -38,6 +38,10 @@ export const Agendamento = sequelize.define(
       type: DataTypes.BIGINT,
       allowNull: false,
     },
+    lembrete_enviado: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     tableName: "agendamentos",

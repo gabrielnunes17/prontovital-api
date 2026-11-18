@@ -3,6 +3,7 @@ import { User } from "../models/User.js";
 import { Paciente } from "../models/Paciente.js";
 import { Profissional } from "../models/Profissional.js";
 import { sequelize } from "../db.js";
+import { RefreshToken } from "../models/RefreshToken.js";
 
 async function criarUsuario(req, res) {
   const t = await sequelize.transaction();
@@ -265,6 +266,10 @@ async function cancelarConta(req, res) {
 
     if (usuario.ativo) {
       await usuario.update({ ativo: false });
+      await RefreshToken.update(
+        { revogado: true },
+        { where: { id_user: usuario.id_user, revogado: false } },
+      );
     }
 
     return res.status(200).json({
